@@ -26,7 +26,7 @@ def get_all_quote(db: Session = Depends(db.get_db)):
     quote_list = db.query(model.quote).order_by(func.rand()).limit(1).first()
     random_quote = {
         "quote_content": quote_list.quote_content,
-        "charactor_name": quote_list.charactor_name,
+        "character_name": quote_list.character_name,
         "quote_id":  quote_list.quote_id,
     }
 
@@ -49,6 +49,6 @@ def get_quote(quote_id: int, db: Session = Depends(db.get_db)):
 @app.post("/quote")
 def post_board(body: schemas.quote, db: Session = Depends(db.get_db)):
     quote_data = model.quote(
-        quote_content=body.quote_content, charactor_name=body.charactor_name)
+        quote_content=body.quote_content, character_name=body.character_name)
     db.post_db(db, quote_data)
     return {"response": "추가 완료"}

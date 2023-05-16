@@ -1,5 +1,7 @@
-uvicorn server:app --host 10.150.150.168 --port 8000 --reload
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
-uvicorn server:app --port 8000 --reload
+gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app
 
-uvicorn server:app --host 0.0.0.0 --port 8000 --reload
+ssh root@167.99.64.58
+
+pip install -r requirements.txt

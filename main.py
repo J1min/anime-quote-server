@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import func, select
 
 from interface import model, schemas
-from util import db
+from util import db_util
 import database
 
 app = FastAPI()
@@ -22,7 +22,7 @@ app.add_middleware(
 
 
 @app.get("/quote")
-def get_all_quote(db: Session = Depends(db.get_db)):
+def get_all_quote(db: Session = Depends(db_util.get_db)):
     quote_list = db.query(model.quote).order_by(func.rand()).limit(1).first()
     random_quote = {
         "quote_content": quote_list.quote_content,
@@ -34,21 +34,21 @@ def get_all_quote(db: Session = Depends(db.get_db)):
 
 
 @app.get("/quote/all")
-def get_all_quote(db: Session = Depends(db.get_db)):
+def get_all_quote(db: Session = Depends(db_util.get_db)):
     quote_list = db.query(model.quote).all()
     return {"list": quote_list}
 
 
 @app.get("/quote/{quote_id}")
-def get_quote(quote_id: int, db: Session = Depends(db.get_db)):
+def get_quote(quote_id: int, db: Session = Depends(db_util.get_db)):
     quote = db.query(model.quote).filter(
         model.quote.quote_id == quote_id).first()
     return {"quote": quote}
 
 
 @app.post("/quote")
-def post_board(body: schemas.quote, db: Session = Depends(db.get_db)):
+def post_board(body: schemas.quote, db: Session = Depends(db_util.get_db)):
     quote_data = model.quote(
         quote_content=body.quote_content, character_name=body.character_name)
-    db.post_db(db, quote_data)
+    db_util.post_db(db, quote_data)
     return {"response": "추가 완료"}
